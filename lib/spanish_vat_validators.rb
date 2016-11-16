@@ -28,7 +28,7 @@ module ActiveModel::Validations
       impares = 0
       uletra = ["J", "A", "B", "C", "D", "E", "F", "G", "H", "I"]
       texto = value.upcase
-      regular = /^[ABCDEFGHKLMNPQRS]\d{7}[0-9,A-J]$/#g);
+      regular = /^[ABCDEFGHKLMNPQRSVW]\d{7}[0-9,A-J]$/#g);
       if regular.match(value).blank?
         false
       else
@@ -37,18 +37,14 @@ module ActiveModel::Validations
         [1,3,5,7].collect do |cont|
           xxx = (2 * texto[cont,1].to_i).to_s + "0"
           impares += xxx[0,1].to_i + xxx[1,1].to_i
-        end
-
-        [2,4,6].collect do |cont|
-          pares += texto[cont,1].to_i
+          pares += texto[cont+1,1].to_i if cont < 7
         end
 
         suma = (pares + impares).to_s
         unumero = suma.last.to_i
         unumero = (10 - unumero).to_s
-        unumero = 0 if(unumero == 10)
-
-        ((ultima == unumero) || (ultima == uletra[unumero.to_i]))
+        unumero = 0 if(unumero.to_i == 10)
+        ((ultima.to_i == unumero.to_i) || (ultima == uletra[unumero.to_i]))
       end
     end
 
